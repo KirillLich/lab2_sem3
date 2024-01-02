@@ -11,9 +11,8 @@
 
 class UserInterface
 {
-	int action;
 	template<typename T>
-	T takeItem(std::string errorMessage)
+	T TakeItem(std::string errorMessage)
 	{
 		T out;
 		std::cin >> out;
@@ -23,11 +22,11 @@ class UserInterface
 
 			std::cout << errorMessage << '\n';
 			while (std::cin.get() != '\n') {}
-			out = this->takeItem<T>(errorMessage);
+			out = this->TakeItem<T>(errorMessage);
 		}
 		return out;
 	}
-	void printDialogMenu(const std::string dialogActions[], int n)
+	void PrintDialogMenu(const std::string dialogActions[], int n)
 	{
 		for (size_t i = 0; i < n; i++)
 		{
@@ -36,7 +35,7 @@ class UserInterface
 	}
 
 	template<typename T>
-	void printSequence(Sequence<T>* seq)
+	void PrintSequence(Sequence<T>* seq)
 	{
 		std::cout << '[';
 		for (size_t i = 0; i < seq->GetLenght(); i++)
@@ -47,7 +46,7 @@ class UserInterface
 		std::cout << ']' << std::endl;
 	}
 
-	ArraySequence<int>* makeBaseArr()
+	ArraySequence<int>* MakeBaseArr()
 	{
 		int* array = new int[4];
 		array[0] = 1;
@@ -60,7 +59,7 @@ class UserInterface
 
 		return arr;
 	}
-	ArraySequence<int>* makeRandomArr(size_t size)
+	ArraySequence<int>* MakeRandomArr(size_t size)
 	{
 		int* array = new int[size];
 		for (size_t i = 0; i < size; i++)
@@ -73,10 +72,10 @@ class UserInterface
 
 		return arr;
 	}
-	void useArray()
+	void UseArray()
 	{
 		const std::string dialogActions[] = { "1. Exit", "2. Make new array", "3. Make random array", "4. Bubble sort increase order", "5. Insertion sort increase order", "6. Quick sort increase order", "7. Bubble sort decrease order", "8. Insertion sort decrease order", "9. Quick sort decrease order" };
-		ArraySequence<int>* intArr = makeBaseArr();
+		ArraySequence<int>* intArr = MakeBaseArr();
 		bool exit = false;
 		int newSize;
 		int position;
@@ -84,10 +83,10 @@ class UserInterface
 
 		while (!exit)
 		{
-			printDialogMenu(dialogActions, 9);
+			PrintDialogMenu(dialogActions, 9);
 			std::cout << "Started array: ";
-			printSequence<int>(intArr);
-			switch (this->takeItem<int>("Use numbers"))
+			PrintSequence<int>(intArr);
+			switch (this->TakeItem<int>("Use numbers"))
 			{
 			case 1:
 				exit = true;
@@ -96,7 +95,7 @@ class UserInterface
 				delete intArr;
 				intArr = new ArraySequence<int>;
 				std::cout << "\nSet size for new array: ";
-				newSize = this->takeItem<int>("Use numbers");
+				newSize = this->TakeItem<int>("Use numbers");
 				std::cout << "\nWrite " << newSize << " elements of array.\n";
 				for (size_t i = 0; i < newSize; i++)
 				{
@@ -108,8 +107,8 @@ class UserInterface
 			case 3:
 				delete intArr;
 				std::cout << "\nSet size for new array: ";
-				newSize = this->takeItem<int>("Use numbers");
-				intArr = makeRandomArr(newSize);
+				newSize = this->TakeItem<int>("Use numbers");
+				intArr = MakeRandomArr(newSize);
 				newSize = 0;
 				break;
 			case 4:
@@ -138,115 +137,111 @@ class UserInterface
 		delete intArr;
 	}
 
-	void benchmark()
+	typedef int(*comp)(int, int);
+	typedef Sequence<int>* (*SortingFunction)(Sequence<int>*, comp);
+
+	void SingleBenchmark(SortingFunction sortingFunction, int* array, size_t size, int& result)
 	{
+		ArraySequence<int>* arrayCopy = new ArraySequence<int>(array, size);
+
+		auto startSort = std::chrono::high_resolution_clock::now();
+		sortingFunction(arrayCopy, CompIncreasingOrder);
+		auto stopSort = std::chrono::high_resolution_clock::now();
+		delete arrayCopy;
+		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopSort - startSort);
+
+		result += (int)duration.count();
+	}
+
+	void Benchmark()
+	{
+		const int iterationsNumber = 5;
+		const int step = 1000;
+		const int minNumberOfElements = 1000;
+		const int maxNumberOfElements = 19 * 1000;
+		const int resultsNumber = (maxNumberOfElements - minNumberOfElements) / step + 1;
+
+
 		int count = 0;
-		int averageResultBubble[10] = { 0,0,0,0,0,0,0,0,0,0 };
-		int averageResultInsertion[10] = { 0,0,0,0,0,0,0,0,0,0 };
-		int averageResultQuick[10] = { 0,0,0,0,0,0,0,0,0,0 };
-		for (size_t n = 1; n <= 5; n++)
+		int averageResultBubble[resultsNumber] = {0};
+		int averageResultInsertion[resultsNumber] = {0};
+		int averageResultQuick[resultsNumber] = {0};
+		for (size_t n = 1; n <= iterationsNumber; n++)
 		{
-			for (size_t i = 10 * 1000; i <= 20 * 1000; i += 1000)
+			for (size_t numberOfElements = minNumberOfElements; numberOfElements <= maxNumberOfElements; numberOfElements += step)
 			{
 
-				int* array = new int[i];
-				for (size_t j = 0; j < i; j++)
+				int* array = new int[numberOfElements];
+				for (size_t j = 0; j < numberOfElements; j++)
 				{
 					array[j] = rand() % 1000;
 				}
 
-				std::cout << "Test for " << i << " elements\n";
+				std::cout << "Test for " << numberOfElements << " elements\n";
 
-				ArraySequence<int>* intArr1 = new ArraySequence<int>(array, i);
-				ArraySequence<int>* intArr2 = new ArraySequence<int>(array, i);
-				ArraySequence<int>* intArr3 = new ArraySequence<int>(array, i);
-				
+				SingleBenchmark(BubbleSort, array, numberOfElements, averageResultBubble[count]);
+				SingleBenchmark(InsertionSort, array, numberOfElements, averageResultInsertion[count]);
+				SingleBenchmark(QuickSort, array, numberOfElements, averageResultQuick[count]);
 				delete[] array;
-
-				auto startBubbleSort = std::chrono::high_resolution_clock::now();
-				BubbleSort(intArr1, CompIncreasingOrder);
-				auto stopBubbleSort = std::chrono::high_resolution_clock::now();
-				delete intArr1;
-				auto durationBubble = std::chrono::duration_cast<std::chrono::milliseconds>(stopBubbleSort - startBubbleSort);
-
-				std::cout << "Time taken by bubble sort: " << durationBubble.count() << " milliseconds" << std::endl;
-				averageResultBubble[count] += (int)durationBubble.count();
-
-
-				auto startInsertionSort = std::chrono::high_resolution_clock::now();
-				InsertionSort(intArr2, CompIncreasingOrder);
-				auto stopInsertionSort = std::chrono::high_resolution_clock::now();
-				delete intArr2;
-				auto durationInsertion = std::chrono::duration_cast<std::chrono::milliseconds>(stopInsertionSort - startInsertionSort);
-
-				std::cout << "Time taken by insertion sort: " << durationInsertion.count() << " milliseconds" << std::endl;
-				averageResultInsertion[count] += (int)durationInsertion.count();
-
-
-				auto startQuickSort = std::chrono::high_resolution_clock::now();
-				QuickSort(intArr3, CompIncreasingOrder);
-				auto stopQuickSort = std::chrono::high_resolution_clock::now();
-				delete intArr3;
-				auto durationQuick = std::chrono::duration_cast<std::chrono::milliseconds>(stopQuickSort - startQuickSort);
-
-				std::cout << "Time taken by quick sort: " << durationQuick.count() << " milliseconds" << std::endl;
-				averageResultQuick[count] += (int)durationQuick.count();
-
-
 				count++;
 			}
 			count = 0;
 		}
-		for (size_t i = 0; i < 10; i++)
+		for (size_t i = 0; i < resultsNumber; i++)
 		{
-			averageResultBubble[i] /= 5;
-			averageResultInsertion[i] /= 5;
-			averageResultQuick[i] /= 5;
-			std::cout << "For 10^" << i + 1 << " elements\n";
+			averageResultBubble[i] /= iterationsNumber;
+			averageResultInsertion[i] /= iterationsNumber;
+			averageResultQuick[i] /= iterationsNumber;
+			std::cout << "For 1000 * " << i + 1 << " elements\n";
 			std::cout << "Average time taken by bubble sort: " << averageResultBubble[i] << " milliseconds" << std::endl;
 			std::cout << "Average time taken by insertion sort: " << averageResultInsertion[i] << " milliseconds" << std::endl;
 			std::cout << "Average time taken by quick sort: " << averageResultQuick[i] << " milliseconds" << std::endl;
 		}
 	}
 
-	void chooseStartAction(bool &exit)
+	void ChooseStartAction()
 	{
 		const std::string dialogActions[] = { "1. Run tests", "2. Work with array", "3. Run time test", "4. Exit"};
-		printDialogMenu(dialogActions, 4);
-		switch (this->takeItem<int>("Use numbers"))
+		bool exit = false;
+		while (!exit)
 		{
-		case 1:
-			runTests();
-			break;
-		case 2:
-			useArray();
-			break;
-		case 3:
-			benchmark();
-			break;
-		case 4:
-			exit = true;
-			break;
-		default:
-			std::cout << "Use number from 1 to 7\n";
-			break;
+			PrintDialogMenu(dialogActions, 4);
+			switch (this->TakeItem<int>("Use numbers"))
+			{
+			case 1:
+				RunTests();
+				break;
+			case 2:
+				UseArray();
+				break;
+			case 3:
+				Benchmark();
+				break;
+			case 4:
+				exit = true;
+				break;
+			default:
+				std::cout << "Use number from 1 to 7\n";
+				break;
+			}
 		}
 	}
 
-	void runTests()
+	void RunTests()
 	{
 		ArraySequenceTester testArrayS;
+		testArrayS.RunTests();
 		SmrtPtrTester testPtr;
-		SortTester testSortings;
 		testPtr.RunTests();
+		SortTester testSortings;
+		testSortings.RunTests();
 		std::cout << "\n\tAll tests finished. No errors found.\n\n";
 	}
 
 public:
 	UserInterface()
 	{
-		bool exit = false;
-		while(!exit) chooseStartAction(exit);
+		ChooseStartAction();
 	}
 };
 

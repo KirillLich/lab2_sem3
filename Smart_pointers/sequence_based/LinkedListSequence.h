@@ -149,13 +149,6 @@ public:
 
 		length++;
 	}
-	Sequence<T>* Concat(LinkedListSequence<T>* List)
-	{
-		/*LinkedListSequence<T>* listS = new LinkedListSequence<T>;
-		delete listS->list;
-		listS->list = new LinkedList<T>(this->list->Concat(*List->list));
-		return listS;*/
-	}
 };
 
 #endif 

@@ -56,7 +56,7 @@ Sequence<T>* InsertionSort(Sequence<T>* seq, int (*cmp)(T, T))
 }
 
 template<typename T>
-void quick(Sequence<T>* seq, int (*cmp)(T, T), size_t start, size_t end)
+void Quick(Sequence<T>* seq, int (*cmp)(T, T), size_t start, size_t end)
 {
 	int pivotIndex = start + (end - start) / 2;
 	T pivot = seq->Get(pivotIndex);
@@ -87,8 +87,8 @@ void quick(Sequence<T>* seq, int (*cmp)(T, T), size_t start, size_t end)
 		else if (rightIndex == pivotIndex) pivotIndex = leftIndex;
 	}
 
-	if(pivotIndex > start) quick(seq, cmp, start, pivotIndex - 1);
-	if(pivotIndex < end) quick(seq, cmp, pivotIndex + 1, end);
+	if(pivotIndex > start) Quick(seq, cmp, start, pivotIndex - 1);
+	if(pivotIndex < end) Quick(seq, cmp, pivotIndex + 1, end);
 }
 
 template<typename T>
@@ -100,7 +100,7 @@ Sequence<T>* QuickSort(Sequence<T>* seq, int (*cmp)(T, T))
 	}
 	if (seq->GetLenght() != 0)
 	{
-		quick(seq, cmp, 0, seq->GetLenght() - 1);
+		Quick(seq, cmp, 0, seq->GetLenght() - 1);
 	}
 	return seq;
 }

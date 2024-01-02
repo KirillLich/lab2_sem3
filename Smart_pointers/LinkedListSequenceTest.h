@@ -2,6 +2,7 @@
 #define LINKED_LIST_SEQUENCE_TEST
 #include "sequence_based/LinkedListSequence.h"
 #include <assert.h>
+#include <string>
 
 class LinkedListSequenceTester
 {
@@ -242,10 +243,10 @@ class LinkedListSequenceTester
 
 	
 public:
-	LinkedListSequenceTester()
+	LinkedListSequenceTester() = default;
+
+	void RunTests()
 	{
-
-
 		this->TestAllConstructorsLinkedList();
 
 		this->TestAllDecompositionsLinkedList();

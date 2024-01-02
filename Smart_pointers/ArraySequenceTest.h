@@ -11,16 +11,17 @@ class ArraySequenceTester
 
 	void TestConstructorArrayFromArray_1_5_3_4()
 	{
-		int* array = new int[4];
+		const size_t arraySize = 4;
+		int* array = new int[arraySize];
 		array[0] = 1;
 		array[1] = 5;
 		array[2] = 3;
 		array[3] = 4;
 
-		ArraySequence<int> arrayD(array, 4);
+		ArraySequence<int> arrayD(array, arraySize);
 		delete[] array;
 
-		assert(arrayD.GetLenght() == 4);
+		assert(arrayD.GetLenght() == arraySize);
 		assert(arrayD.Get(0) == 1);
 		assert(arrayD.Get(1) == 5);
 
@@ -45,19 +46,20 @@ class ArraySequenceTester
 	}
 	void TestCopyConstructorArray_CopyOf_1_5_6_3_9()
 	{
-		int* array = new int[5];
+		const size_t arraySize = 5;
+		int* array = new int[arraySize];
 		array[0] = 1;
 		array[1] = 5;
 		array[2] = 6;
 		array[3] = 3;
 		array[4] = 9;
 
-		ArraySequence<int> arrayD(array, 5);
+		ArraySequence<int> arrayD(array, arraySize);
 		delete[] array;
 
 		ArraySequence<int> arrayDCopy(arrayD);
 		assert(arrayDCopy.GetLenght() == arrayD.GetLenght());
-		for (size_t i = 0; i < 5; i++)
+		for (size_t i = 0; i < arraySize; i++)
 		{
 			assert(arrayD.Get(i) == arrayDCopy.Get(i));
 		}
@@ -72,14 +74,15 @@ class ArraySequenceTester
 
 	void TestGetByIndexArray_1_5_6_3_9()
 	{
-		int* array = new int[5];
+		const size_t arraySize = 5;
+		int* array = new int[arraySize];
 		array[0] = 1;
 		array[1] = 5;
 		array[2] = 6;
 		array[3] = 3;
 		array[4] = 9;
 
-		ArraySequence<int> arrayD(array, 5);
+		ArraySequence<int> arrayD(array, arraySize);
 		delete[] array;
 
 		assert(arrayD.Get(0) == 1);
@@ -92,30 +95,32 @@ class ArraySequenceTester
 	}
 	void TestGetSizeArray_1_5_6_3_9()
 	{
-		int* array = new int[5];
+		const size_t arraySize = 5;
+		int* array = new int[arraySize];
 		array[0] = 1;
 		array[1] = 5;
 		array[2] = 6;
 		array[3] = 3;
 		array[4] = 9;
 
-		ArraySequence<int> arrayD(array, 5);
+		ArraySequence<int> arrayD(array, arraySize);
 		delete[] array;
 
-		assert(arrayD.GetLenght() == 5);
+		assert(arrayD.GetLenght() == arraySize);
 
 		NumberOfPassedTests++;
 	}
 	void TestGetFirstArray_1_5_6_3_9()
 	{
-		int* array = new int[5];
+		const size_t arraySize = 5;
+		int* array = new int[arraySize];
 		array[0] = 1;
 		array[1] = 5;
 		array[2] = 6;
 		array[3] = 3;
 		array[4] = 9;
 
-		ArraySequence<int> arrayD(array, 5);
+		ArraySequence<int> arrayD(array, arraySize);
 		delete[] array;
 
 		assert(arrayD.GetFirst() == 1);
@@ -123,14 +128,15 @@ class ArraySequenceTester
 	}
 	void TestGetLastArray_1_5_6_3_9()
 	{
-		int* array = new int[5];
+		const size_t arraySize = 5;
+		int* array = new int[arraySize];
 		array[0] = 1;
 		array[1] = 5;
 		array[2] = 6;
 		array[3] = 3;
 		array[4] = 9;
 
-		ArraySequence<int> arrayD(array, 5);
+		ArraySequence<int> arrayD(array, arraySize);
 		delete[] array;
 
 		assert(arrayD.GetLast() == 9);
@@ -146,76 +152,84 @@ class ArraySequenceTester
 
 	void TestAppendEmptyArray()
 	{
+		int expectedNumber = 10;
 		ArraySequence<int> arrayD;
-		arrayD.Append(10);
+		arrayD.Append(expectedNumber);
 
-		assert(arrayD.Get(0) == 10);
+		assert(arrayD.Get(0) == expectedNumber);
 
 		NumberOfPassedTests++;
 	}
 	void TestAppendArray_1_5_6_3_9()
 	{
-		int* array = new int[5];
+		const size_t arraySize = 5;
+		int* array = new int[arraySize];
 		array[0] = 1;
 		array[1] = 5;
 		array[2] = 6;
 		array[3] = 3;
 		array[4] = 9;
 
-		ArraySequence<int> arrayD(array, 5);
+		ArraySequence<int> arrayD(array, arraySize);
 		delete[] array;
 
-		arrayD.Append(10);
-		assert(arrayD.GetLenght() == 6);
-		assert(arrayD.Get(5) == 10);
+		int expectedNumber = 10;
+		arrayD.Append(expectedNumber);
+		assert(arrayD.GetLenght() == arraySize + 1);
+		assert(arrayD.Get(5) == expectedNumber);
 
 		NumberOfPassedTests++;
 	}
 	void TestPrependEmptyArray()
 	{
+		int expectedNumber = 10;
 		ArraySequence<int> arrayD;
-		arrayD.Prepend(10);
+		arrayD.Prepend(expectedNumber);
 
-		assert(arrayD.Get(0) == 10);
+		assert(arrayD.Get(0) == expectedNumber);
 
 		NumberOfPassedTests++;
 	}
 	void TestPrependArray_1_5_6_3_9()
 	{
-		int* array = new int[5];
+		const size_t arraySize = 5;
+		int* array = new int[arraySize];
 		array[0] = 1;
 		array[1] = 5;
 		array[2] = 6;
 		array[3] = 3;
 		array[4] = 9;
 
-		ArraySequence<int> arrayD(array, 5);
+		ArraySequence<int> arrayD(array, arraySize);
 		delete[] array;
 
-		arrayD.Prepend(10);
-		assert(arrayD.GetLenght() == 6);
-		assert(arrayD.GetFirst() == 10);
+		int expectedNumber = 10;
+		arrayD.Prepend(expectedNumber);
+		assert(arrayD.GetLenght() == arraySize + 1);
+		assert(arrayD.GetFirst() == expectedNumber);
 
 		NumberOfPassedTests++;
 	}
 	void TestInsert_10Array_1_2_3To2()
 	{
-		int* array = new int[3];
+		const size_t arraySize = 3;
+		int* array = new int[arraySize];
 		array[0] = 1;
 		array[1] = 2;
 		array[2] = 3;
 
-		ArraySequence<int> arrayD(array, 3);
+		ArraySequence<int> arrayD(array, arraySize);
+
+		int expectedNumber = 10;
+		arrayD.InsertAt(expectedNumber, 2);
+
+		assert(arrayD.GetLenght() == arraySize + 1);
+		assert(arrayD.Get(0) == array[0]);
+		assert(arrayD.Get(1) == array[1]);
+		assert(arrayD.Get(2) == expectedNumber);
+		assert(arrayD.Get(3) == array[2]);
+
 		delete[] array;
-
-		arrayD.InsertAt(10, 2);
-
-		assert(arrayD.GetLenght() == 4);
-		assert(arrayD.Get(0) == 1);
-		assert(arrayD.Get(1) == 2);
-		assert(arrayD.Get(2) == 10);
-		assert(arrayD.Get(3) == 3);
-
 		NumberOfPassedTests++;
 	}
 	void TestAllSetsInArray()
@@ -228,7 +242,9 @@ class ArraySequenceTester
 	}
 
 public:
-	ArraySequenceTester()
+	ArraySequenceTester() = default;
+
+	void RunTests()
 	{
 		this->TestAllConstructorsArray();
 

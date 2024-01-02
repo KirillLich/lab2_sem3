@@ -18,7 +18,10 @@ int CompDecreasingOrder(T first, T second)
 
 class SortTester
 {
-	void SortTestEmptySequence(Sequence<int>*(*SortingFunction)(Sequence<int>*, int(*)(int,int)))
+	typedef int(*comp)(int, int);
+	typedef Sequence<int>* (*sortingFunction)(Sequence<int>*, comp);
+
+	void SortTestEmptySequence(sortingFunction SortingFunction)
 	{
 		ArraySequence<int>* arr = new ArraySequence<int>;
 		try
@@ -28,41 +31,43 @@ class SortTester
 		catch (const std::exception& e)
 		{
 			delete arr;
-			assert(e.what());
+			assert(false);
 		}
 		delete arr;
 	}
-	void SortTestIntSequenceInDecreasingOrder(Sequence<int>* (*SortingFunction)(Sequence<int>*, int(*)(int, int)))
+	void SortTestIntSequenceInDecreasingOrder(sortingFunction SortingFunction)
 	{
 		ArraySequence<int>* arr = new ArraySequence<int>;
 
+		const size_t arraySize = 5;
 		//array {10, 3, 7, -1, 6}
 		arr->Append(10);
 		arr->Append(3);
 		arr->Append(7);
 		arr->Append(-1);
 		arr->Append(6);
-		int sortArr[5] = { -1,3,6,7,10 };
+		int sortArr[arraySize] = { -1,3,6,7,10 };
 
 		try {
 
 		SortingFunction(arr, CompIncreasingOrder);
 		}
 		catch (std::exception&) {
-			delete arr; arr = nullptr;
-			assert(true);
+			delete arr;
+			assert(false);
 		}
 		
-		for (size_t i = 0; i < 5; i++)
+		for (size_t i = 0; i < arraySize; i++)
 		{
 			assert(arr->Get(i) == sortArr[i]);
 		}
 		delete arr;
 	}
-	void SortTestIntSequenceInIncreasingOrder(Sequence<int>* (*SortingFunction)(Sequence<int>*, int(*)(int, int)))
+	void SortTestIntSequenceInIncreasingOrder(sortingFunction SortingFunction)
 	{
 		ArraySequence<int>* arr = new ArraySequence<int>;
 
+		const size_t arraySize = 5;
 		//array {10, 3, 7, -1, 6}
 		arr->Append(10);
 		arr->Append(3);
@@ -80,7 +85,7 @@ class SortTester
 			delete arr;
 			assert(false);
 		}
-		for (size_t i = 0; i < 5; i++)
+		for (size_t i = 0; i < arraySize; i++)
 		{
 			assert(arr->Get(i) == sortArr[i]);
 		}
@@ -108,7 +113,8 @@ class SortTester
 		SortTestIntSequenceInIncreasingOrder(QuickSort);
 	}
 public:
-	SortTester()
+	SortTester() = default;
+	void RunTests()
 	{
 		BubbleSortTests();
 		InsertionSortTests();
