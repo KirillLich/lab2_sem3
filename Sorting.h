@@ -3,9 +3,9 @@
 #include "Smart_pointers/based_struct/Sequence.h"
 
 template<typename T>
-Sequence<T>* BubbleSort(Sequence<T>* seq, int (*cmp)(T, T))
+Sequence<T>* BubbleSort(Sequence<T>* seq, bool (*cmp)(T, T))
 {
-	if (seq == NULL)
+	if (seq == nullptr)
 	{
 		return seq;
 	}
@@ -30,9 +30,9 @@ Sequence<T>* BubbleSort(Sequence<T>* seq, int (*cmp)(T, T))
 }
 
 template<typename T>
-Sequence<T>* InsertionSort(Sequence<T>* seq, int (*cmp)(T, T))
+Sequence<T>* InsertionSort(Sequence<T>* seq, bool (*cmp)(T, T))
 {
-	if (seq == NULL)
+	if (seq == nullptr)
 	{
 		return seq;
 	}
@@ -56,7 +56,7 @@ Sequence<T>* InsertionSort(Sequence<T>* seq, int (*cmp)(T, T))
 }
 
 template<typename T>
-void Quick(Sequence<T>* seq, int (*cmp)(T, T), size_t start, size_t end)
+void Quick(Sequence<T>* seq, bool (*cmp)(T, T), size_t start, size_t end)
 {
 	int pivotIndex = start + (end - start) / 2;
 	T pivot = seq->Get(pivotIndex);
@@ -87,14 +87,14 @@ void Quick(Sequence<T>* seq, int (*cmp)(T, T), size_t start, size_t end)
 		else if (rightIndex == pivotIndex) pivotIndex = leftIndex;
 	}
 
-	if(pivotIndex > start) Quick(seq, cmp, start, pivotIndex - 1);
-	if(pivotIndex < end) Quick(seq, cmp, pivotIndex + 1, end);
+	if (pivotIndex > start) Quick(seq, cmp, start, pivotIndex - 1);
+	if (pivotIndex < end) Quick(seq, cmp, pivotIndex + 1, end);
 }
 
 template<typename T>
-Sequence<T>* QuickSort(Sequence<T>* seq, int (*cmp)(T, T))
+Sequence<T>* QuickSort(Sequence<T>* seq, bool (*cmp)(T, T))
 {
-	if (seq == NULL)
+	if (seq == nullptr)
 	{
 		return seq;
 	}

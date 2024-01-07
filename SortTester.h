@@ -3,30 +3,19 @@
 #include <assert.h>
 #include "Sorting.h"
 #include "Smart_pointers/sequence_based/ArraySequence.h"
-
-template<typename T>
-int CompIncreasingOrder(T first, T second)
-{
-	return first > second;
-}
-
-template<typename T>
-int CompDecreasingOrder(T first, T second)
-{
-	return first < second;
-}
+#include "Comparators.h"
 
 class SortTester
 {
-	typedef int(*comp)(int, int);
-	typedef Sequence<int>* (*sortingFunction)(Sequence<int>*, comp);
+	typedef bool(*Comp)(int, int);
+	typedef Sequence<int>* (*Sort)(Sequence<int>*, Comp);
 
-	void SortTestEmptySequence(sortingFunction SortingFunction)
+	void EmptySequence(Sort func)
 	{
 		ArraySequence<int>* arr = new ArraySequence<int>;
 		try
 		{
-			SortingFunction(arr, CompIncreasingOrder);
+			func(arr, CompIncreasingOrder);
 		}
 		catch (const std::exception& e)
 		{
@@ -35,7 +24,7 @@ class SortTester
 		}
 		delete arr;
 	}
-	void SortTestIntSequenceInDecreasingOrder(sortingFunction SortingFunction)
+	void IntSequenceInDecreasingOrder(Sort func)
 	{
 		ArraySequence<int>* arr = new ArraySequence<int>;
 
@@ -50,7 +39,7 @@ class SortTester
 
 		try {
 
-		SortingFunction(arr, CompIncreasingOrder);
+		func(arr, CompIncreasingOrder);
 		}
 		catch (std::exception&) {
 			delete arr;
@@ -63,7 +52,7 @@ class SortTester
 		}
 		delete arr;
 	}
-	void SortTestIntSequenceInIncreasingOrder(sortingFunction SortingFunction)
+	void IntSequenceInIncreasingOrder(Sort func)
 	{
 		ArraySequence<int>* arr = new ArraySequence<int>;
 
@@ -78,7 +67,7 @@ class SortTester
 
 		try
 		{
-			SortingFunction(arr, CompDecreasingOrder);
+			func(arr, CompDecreasingOrder);
 		}
 		catch (const std::exception&)
 		{
@@ -92,33 +81,33 @@ class SortTester
 		delete arr;
 	}
 
-	void BubbleSortTests()
+	void Bubble()
 	{
-		SortTestEmptySequence(BubbleSort);
-		SortTestIntSequenceInDecreasingOrder(BubbleSort);
-		SortTestIntSequenceInIncreasingOrder(BubbleSort);
+		EmptySequence(BubbleSort);
+		IntSequenceInDecreasingOrder(BubbleSort);
+		IntSequenceInIncreasingOrder(BubbleSort);
 	}
 
-	void InsertionSortTests()
+	void Insertion()
 	{
-		SortTestEmptySequence(InsertionSort);
-		SortTestIntSequenceInDecreasingOrder(InsertionSort); 
-		SortTestIntSequenceInIncreasingOrder(InsertionSort);
+		EmptySequence(InsertionSort);
+		IntSequenceInDecreasingOrder(InsertionSort); 
+		IntSequenceInIncreasingOrder(InsertionSort);
 	}
 
-	void QuickSortTests()
+	void Quick()
 	{
-		SortTestEmptySequence(QuickSort);
-		SortTestIntSequenceInDecreasingOrder(QuickSort);
-		SortTestIntSequenceInIncreasingOrder(QuickSort);
+		EmptySequence(QuickSort);
+		IntSequenceInDecreasingOrder(QuickSort);
+		IntSequenceInIncreasingOrder(QuickSort);
 	}
 public:
 	SortTester() = default;
 	void RunTests()
 	{
-		BubbleSortTests();
-		InsertionSortTests();
-		QuickSortTests();
+		Bubble();
+		Insertion();
+		Quick();
 	}
 };
 

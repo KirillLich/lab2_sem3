@@ -1,6 +1,7 @@
 #ifndef SMART_POINTER
 #define SMART_POINTER
 #include <algorithm>
+#include <stdexcept>
 
 template<typename T>
 class SmrtPtr
@@ -20,8 +21,8 @@ public:
 	~SmrtPtr();
 
 	//make and get functions
-	void make(const T& item);
-	T& get();
+	void Make(const T& item);
+	T& Get();
 
 	//3 operators (1 overloaded)
 	T& operator*();
@@ -32,7 +33,7 @@ public:
 
 private:
 
-	void clearPtr();
+	void ClearPtr();
 
 	T* ptr;
 	size_t* counter;
@@ -89,7 +90,7 @@ SmrtPtr<T>::SmrtPtr(const SmrtPtr<P>& sPtr)
 
 	this->ptr = dynamic_cast<T*>(sPtr.ptr);
 	if (this->ptr == NULL) {
-		throw std::exception("Class P is not subclass of class T");
+		throw std::runtime_error("Class P is not subclass of class T");
 	}
 	this->counter = sPtr.counter;
 	(*sPtr.counter)++;
@@ -108,24 +109,24 @@ asdasdsa;
 template<typename  T>
 SmrtPtr<T>::~SmrtPtr()
 {
-	this->clearPtr();
+	this->ClearPtr();
 }
 
 //get/make realizations
 template<typename T>
-T& SmrtPtr<T>::get()
+T& SmrtPtr<T>::Get()
 {
 	if (this->ptr == NULL)
 	{
-		throw(std::exception("Empty pointer"));
+		throw(std::runtime_error("Empty pointer"));
 	}
 	return *(this->ptr);
 }
 
 template <typename T>
-void SmrtPtr<T>:: make(const T& item)
+void SmrtPtr<T>:: Make(const T& item)
 {
-	this->clearPtr();
+	this->ClearPtr();
 
 	counter = new size_t(1);
 	this->ptr = new T(item);
@@ -135,13 +136,13 @@ void SmrtPtr<T>:: make(const T& item)
 template<typename T>
 T& SmrtPtr<T>::operator*()
 {
-	return this->get();
+	return this->Get();
 }
 
 template<typename T>
 void SmrtPtr<T>::operator=(SmrtPtr<T>& sPtr)
 {
-	this->clearPtr();
+	this->ClearPtr();
 
 	this->ptr = sPtr.ptr;
 	this->counter = sPtr.counter;
@@ -151,18 +152,18 @@ void SmrtPtr<T>::operator=(SmrtPtr<T>& sPtr)
 template<typename T> template<typename P>
 void SmrtPtr<T>::operator=(SmrtPtr<P>& sPtr)
 {
-	this->clearPtr();
+	this->ClearPtr();
 
 	this->ptr = dynamic_cast<T*>(sPtr.ptr);
 	if (this->ptr == NULL)
-		throw std::exception("Class P is not subclass of class T");
+		throw std::runtime_error("Class P is not subclass of class T");
 	else
 		this->counter = sPtr.counter;
 	if (this->counter != NULL) (this->counter)++;
 }
 
 template <typename T>
-void SmrtPtr<T>::clearPtr()
+void SmrtPtr<T>::ClearPtr()
 {
 	if (this->ptr != NULL)
 	{
@@ -200,8 +201,8 @@ public:
 	~SmrtPtr();
 
 	//make and get functions
-	void make(const size_t size);
-	T& get(size_t index);
+	void Make(const size_t size);
+	T& Get(size_t index);
 
 	//sort function
 	void sort(size_t length, bool(*comp)(T a, T b));
@@ -264,7 +265,7 @@ SmrtPtr<T[]>::SmrtPtr(const SmrtPtr<P[]>& sPtr)
 	}
 	this->ptr = dynamic_cast<T*>(sPtr.ptr);
 	if (this->ptr == NULL)
-		throw std::exception("Class P is not subclass of class T");
+		throw std::runtime_error("Class P is not subclass of class T");
 	this->counter = sPtr.counter;
 	(*sPtr.counter)++;
 }
@@ -278,17 +279,17 @@ SmrtPtr<T[]>::~SmrtPtr()
 
 //get/make realization
 template<typename T>
-T& SmrtPtr<T[]>::get(size_t index)
+T& SmrtPtr<T[]>::Get(size_t index)
 {
 	if (this->ptr == NULL)
 	{
-		throw(std::exception("Empty pointer"));
+		throw(std::runtime_error("Empty pointer"));
 	}
 	return (this->ptr)[index];
 }
 
 template<typename T>
-void SmrtPtr<T[]>::make(const size_t size)
+void SmrtPtr<T[]>::Make(const size_t size)
 {
 	this->clearPtr();
 	
@@ -320,7 +321,7 @@ void SmrtPtr<T[]>::operator=(SmrtPtr<P[]>& sPtr)
 
 	this->ptr = dynamic_cast<T*>(sPtr.ptr);
 	if (this->ptr == NULL)
-		throw std::exception("Class P is not subclass of class T");
+		throw std::runtime_error("Class P is not subclass of class T");
 	else
 		this->counter = sPtr.counter;
 	if (this->counter != NULL) (this->counter)++;
@@ -331,13 +332,6 @@ T* SmrtPtr<T[]>::operator->()
 {
 	return this->ptr;
 }
-
-//sort with std::sort
-//template<typename T>
-//void SmrtPtr<T[]>::sort(size_t length, bool(*comp)(T a, T b))
-//{
-//	std::sort(ptr, ptr + length, comp);
-//}
 
 template <typename T>
 void SmrtPtr<T[]>::clearPtr()

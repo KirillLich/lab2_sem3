@@ -6,10 +6,10 @@
 
 class LinkedListSequenceTester
 {
-	int NumberOfTests = 2 + 4 + 5;
-	int NumberOfPassedTests = 0;
+	int numberOfTests = 2 + 4 + 5;
+	int numberOfPassedTests = 0;
 
-	void TestConstructorEmptyLinkedList()
+	void EmptyConstructor()
 	{
 		LinkedListSequence<int> listD;
 		assert(listD.GetLenght() == 0);
@@ -24,9 +24,9 @@ class LinkedListSequenceTester
 			assert(s == "EmptyList");
 		}
 
-		NumberOfPassedTests++;
+		numberOfPassedTests++;
 	}
-	void TestCopyConstructorLinkedList_CopyOf_1_5_6_3_9()
+	void CopyConstructor_1_5_6_3_9()
 	{
 		int* array = new int[5];
 		array[0] = 1;
@@ -48,15 +48,15 @@ class LinkedListSequenceTester
 		{
 			assert(listD.Get(i) == listDCopy.Get(i));
 		}
-		NumberOfPassedTests++;
+		numberOfPassedTests++;
 	}
-	void TestAllConstructorsLinkedList()
+	void AllConstructors()
 	{
-		this->TestConstructorEmptyLinkedList();
-		this->TestCopyConstructorLinkedList_CopyOf_1_5_6_3_9();
+		this->EmptyConstructor();
+		this->CopyConstructor_1_5_6_3_9();
 	}
 
-	void TestGetByIndexLinkedList_1_5_6_3_9()
+	void GetByIndex_1_5_6_3_9()
 	{
 		int* array = new int[5];
 		array[0] = 1;
@@ -78,9 +78,9 @@ class LinkedListSequenceTester
 		assert(listD.Get(3) == 3);
 		assert(listD.Get(4) == 9);
 
-		NumberOfPassedTests++;
+		numberOfPassedTests++;
 	}
-	void TestGetSizeLinkedList_1_5_6_3_9()
+	void GetSize_1_5_6_3_9()
 	{
 		int* array = new int[5];
 		array[0] = 1;
@@ -98,9 +98,9 @@ class LinkedListSequenceTester
 
 		assert(listD.GetLenght() == 5);
 
-		NumberOfPassedTests++;
+		numberOfPassedTests++;
 	}
-	void TestGetFirstLinkedList_1_5_6_3_9()
+	void GetFirst_1_5_6_3_9()
 	{
 		int* array = new int[5];
 		array[0] = 1;
@@ -117,9 +117,9 @@ class LinkedListSequenceTester
 		delete[] array;
 
 		assert(listD.GetFirst() == 1);
-		NumberOfPassedTests++;
+		numberOfPassedTests++;
 	}
-	void TestGetLastLinkedList_1_5_6_3_9()
+	void GetLast_1_5_6_3_9()
 	{
 		int* array = new int[5];
 		array[0] = 1;
@@ -136,26 +136,26 @@ class LinkedListSequenceTester
 		delete[] array;
 
 		assert(listD.GetLast() == 9);
-		NumberOfPassedTests++;
+		numberOfPassedTests++;
 	}
-	void TestAllDecompositionsLinkedList()
+	void AllDecompositions()
 	{
-		this->TestGetByIndexLinkedList_1_5_6_3_9();
-		this->TestGetSizeLinkedList_1_5_6_3_9();
-		this->TestGetFirstLinkedList_1_5_6_3_9();
-		this->TestGetLastLinkedList_1_5_6_3_9();
+		this->GetByIndex_1_5_6_3_9();
+		this->GetSize_1_5_6_3_9();
+		this->GetFirst_1_5_6_3_9();
+		this->GetLast_1_5_6_3_9();
 	}
 
-	void TestAppendEmptyLinkedList()
+	void AppendToEmpty()
 	{
 		LinkedListSequence<int> listD;
 		listD.Append(10);
 
 		assert(listD.Get(0) == 10);
 
-		NumberOfPassedTests++;
+		numberOfPassedTests++;
 	}
-	void TestAppendLinkedList_1_5_6_3_9()
+	void AppendTo_1_5_6_3_9()
 	{
 		int* array = new int[5];
 		array[0] = 1;
@@ -175,18 +175,18 @@ class LinkedListSequenceTester
 		assert(listD.GetLenght() == 6);
 		assert(listD.Get(5) == 10);
 
-		NumberOfPassedTests++;
+		numberOfPassedTests++;
 	}
-	void TestPrependEmptyLinkedList()
+	void PrependToEmpty()
 	{
 		LinkedListSequence<int> listD;
 		listD.Prepend(10);
 
 		assert(listD.Get(0) == 10);
 
-		NumberOfPassedTests++;
+		numberOfPassedTests++;
 	}
-	void TestPrependLinkedList_1_5_6_3_9()
+	void PrependTo_1_5_6_3_9()
 	{
 		int* array = new int[5];
 		array[0] = 1;
@@ -206,9 +206,9 @@ class LinkedListSequenceTester
 		assert(listD.GetLenght() == 6);
 		assert(listD.GetFirst() == 10);
 
-		NumberOfPassedTests++;
+		numberOfPassedTests++;
 	}
-	void TestInsert_10LinkedList_1_2_3To2()
+	void Insert_10In_1_2_3To2()
 	{
 		int* array = new int[3];
 		array[0] = 1;
@@ -230,30 +230,29 @@ class LinkedListSequenceTester
 		assert(listD.Get(2) == 10);
 		assert(listD.Get(3) == 3);
 
-		NumberOfPassedTests++;
+		numberOfPassedTests++;
 	}
-	void TestAllSetsInLinkedList()
+	void AllSets()
 	{
-		this->TestAppendEmptyLinkedList();
-		this->TestAppendLinkedList_1_5_6_3_9();
-		this->TestPrependEmptyLinkedList();
-		this->TestPrependLinkedList_1_5_6_3_9();
-		this->TestInsert_10LinkedList_1_2_3To2();
+		this->AppendToEmpty();
+		this->AppendTo_1_5_6_3_9();
+		this->PrependToEmpty();
+		this->PrependTo_1_5_6_3_9();
+		this->Insert_10In_1_2_3To2();
 	}
-
 	
 public:
 	LinkedListSequenceTester() = default;
 
 	void RunTests()
 	{
-		this->TestAllConstructorsLinkedList();
+		this->AllConstructors();
 
-		this->TestAllDecompositionsLinkedList();
+		this->AllDecompositions();
 
-		this->TestAllSetsInLinkedList();
+		this->AllSets();
 
-		assert(NumberOfPassedTests == NumberOfTests);
+		assert(numberOfPassedTests == numberOfTests);
 	}
 };
 

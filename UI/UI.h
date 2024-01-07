@@ -1,13 +1,14 @@
 #ifndef UI_H
 #define UI_H
 #include "..\Smart_pointers\sequence_based\ArraySequence.h"
-#include "..\Smart_pointers\ArraySequenceTest.h"
-#include "..\Smart_pointers\SmartPtrTester.h"
 #include "..\Sorting.h"
-#include "..\SortTester.h"
+#include "..\Tests.h"
+#include "..\Benchmark.h"
+
 #include <chrono>
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 
 class UserInterface
 {
@@ -48,16 +49,17 @@ class UserInterface
 
 	ArraySequence<int>* MakeBaseArr()
 	{
-		int* array = new int[4];
+		const std::size_t arraySize = 4;
+		int* array = new int[arraySize];
 		array[0] = 1;
 		array[1] = 5;
 		array[2] = 3;
 		array[3] = 4;
 
-		ArraySequence<int>* arr = new ArraySequence<int>(array, 4);
+		ArraySequence<int>* arrS = new ArraySequence<int>(array, arraySize);
 		delete[] array;
 
-		return arr;
+		return arrS;
 	}
 	ArraySequence<int>* MakeRandomArr(size_t size)
 	{
@@ -67,23 +69,23 @@ class UserInterface
 			array[i] = rand() % 1000;
 		}
 
-		ArraySequence<int>* arr = new ArraySequence<int>(array, size);
+		ArraySequence<int>* arrS = new ArraySequence<int>(array, size);
 		delete[] array;
 
-		return arr;
+		return arrS;
 	}
 	void UseArray()
 	{
+		const std::size_t numberOfActions = 9;
 		const std::string dialogActions[] = { "1. Exit", "2. Make new array", "3. Make random array", "4. Bubble sort increase order", "5. Insertion sort increase order", "6. Quick sort increase order", "7. Bubble sort decrease order", "8. Insertion sort decrease order", "9. Quick sort decrease order" };
 		ArraySequence<int>* intArr = MakeBaseArr();
 		bool exit = false;
 		int newSize;
-		int position;
 		int item;
 
 		while (!exit)
 		{
-			PrintDialogMenu(dialogActions, 9);
+			PrintDialogMenu(dialogActions, numberOfActions);
 			std::cout << "Started array: ";
 			PrintSequence<int>(intArr);
 			switch (this->TakeItem<int>("Use numbers"))
@@ -137,79 +139,22 @@ class UserInterface
 		delete intArr;
 	}
 
-	typedef int(*comp)(int, int);
-	typedef Sequence<int>* (*SortingFunction)(Sequence<int>*, comp);
-
-	void SingleBenchmark(SortingFunction sortingFunction, int* array, size_t size, int& result)
-	{
-		ArraySequence<int>* arrayCopy = new ArraySequence<int>(array, size);
-
-		auto startSort = std::chrono::high_resolution_clock::now();
-		sortingFunction(arrayCopy, CompIncreasingOrder);
-		auto stopSort = std::chrono::high_resolution_clock::now();
-		delete arrayCopy;
-		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopSort - startSort);
-
-		result += (int)duration.count();
-	}
-
-	void Benchmark()
-	{
-		const int iterationsNumber = 5;
-		const int step = 1000;
-		const int minNumberOfElements = 1000;
-		const int maxNumberOfElements = 19 * 1000;
-		const int resultsNumber = (maxNumberOfElements - minNumberOfElements) / step + 1;
-
-
-		int count = 0;
-		int averageResultBubble[resultsNumber] = {0};
-		int averageResultInsertion[resultsNumber] = {0};
-		int averageResultQuick[resultsNumber] = {0};
-		for (size_t n = 1; n <= iterationsNumber; n++)
-		{
-			for (size_t numberOfElements = minNumberOfElements; numberOfElements <= maxNumberOfElements; numberOfElements += step)
-			{
-
-				int* array = new int[numberOfElements];
-				for (size_t j = 0; j < numberOfElements; j++)
-				{
-					array[j] = rand() % 1000;
-				}
-
-				std::cout << "Test for " << numberOfElements << " elements\n";
-
-				SingleBenchmark(BubbleSort, array, numberOfElements, averageResultBubble[count]);
-				SingleBenchmark(InsertionSort, array, numberOfElements, averageResultInsertion[count]);
-				SingleBenchmark(QuickSort, array, numberOfElements, averageResultQuick[count]);
-				delete[] array;
-				count++;
-			}
-			count = 0;
-		}
-		for (size_t i = 0; i < resultsNumber; i++)
-		{
-			averageResultBubble[i] /= iterationsNumber;
-			averageResultInsertion[i] /= iterationsNumber;
-			averageResultQuick[i] /= iterationsNumber;
-			std::cout << "For 1000 * " << i + 1 << " elements\n";
-			std::cout << "Average time taken by bubble sort: " << averageResultBubble[i] << " milliseconds" << std::endl;
-			std::cout << "Average time taken by insertion sort: " << averageResultInsertion[i] << " milliseconds" << std::endl;
-			std::cout << "Average time taken by quick sort: " << averageResultQuick[i] << " milliseconds" << std::endl;
-		}
-	}
+public:
+	UserInterface() = default;
 
 	void ChooseStartAction()
 	{
+		const std::size_t numberOfActions = 4;
 		const std::string dialogActions[] = { "1. Run tests", "2. Work with array", "3. Run time test", "4. Exit"};
 		bool exit = false;
 		while (!exit)
 		{
-			PrintDialogMenu(dialogActions, 4);
+			PrintDialogMenu(dialogActions, numberOfActions);
 			switch (this->TakeItem<int>("Use numbers"))
 			{
 			case 1:
 				RunTests();
+				std::cout << "\n\tAll tests finished. No errors found.\n\n";
 				break;
 			case 2:
 				UseArray();
@@ -225,23 +170,6 @@ class UserInterface
 				break;
 			}
 		}
-	}
-
-	void RunTests()
-	{
-		ArraySequenceTester testArrayS;
-		testArrayS.RunTests();
-		SmrtPtrTester testPtr;
-		testPtr.RunTests();
-		SortTester testSortings;
-		testSortings.RunTests();
-		std::cout << "\n\tAll tests finished. No errors found.\n\n";
-	}
-
-public:
-	UserInterface()
-	{
-		ChooseStartAction();
 	}
 };
 

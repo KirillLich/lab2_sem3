@@ -26,8 +26,8 @@ public:
 		
 		for (size_t i = 0; i < List.length; i++)
 		{
-			this->Append(ptr.get().item);
-			ptr = ptr.get().next;
+			this->Append(ptr.Get().item);
+			ptr = ptr.Get().next;
 		}
 	}
 	virtual ~LinkedListSequence() 
@@ -36,7 +36,7 @@ public:
 		for (size_t i = 0; i < length; i++)
 		{
 			subNode.~SmrtPtr();
-			subNode = subNode.get().next;
+			subNode = subNode.Get().next;
 		}
 		last.~SmrtPtr();
 	}
@@ -44,28 +44,28 @@ public:
 	T& Get(int Index)
 	{
 		if (length == 0)
-			throw std::exception("EmptyList");
+			throw std::runtime_error("EmptyList");
 		if (Index < 0 || Index >= length)
-			throw std::exception("IndexOutOfRange");
+			throw std::out_of_range("IndexOutOfRange");
 
 		SmrtPtr<node> out = first;
 		for (size_t i = 0; i < Index; i++)
 		{
-			out = out.get().next;
+			out = out.Get().next;
 		}
-		return out.get().item;
+		return out.Get().item;
 	}
 	T& GetFirst()
 	{
 		if (length == 0)
-			throw std::exception("EmptyList");
-		return first.get().item;
+			throw std::runtime_error("EmptyList");
+		return first.Get().item;
 	}
 	T& GetLast()
 	{
 		if (length == 0)
-			throw std::exception("EmptyList");
-		return last.get().item;
+			throw std::runtime_error("EmptyList");
+		return last.Get().item;
 	}
 	const size_t GetLenght()
 	{
@@ -79,16 +79,16 @@ public:
 		subNode.item = Item;
 		if (length != 0)
 		{
-			last.get().next.make(subNode);
-			last = last.get().next;
+			last.Get().next.Make(subNode);
+			last = last.Get().next;
 			if (length == 1)
 			{
-				first.get().next = last;
+				first.Get().next = last;
 			}
 		}
 		else
 		{
-			first.make(subNode);
+			first.Make(subNode);
 			last = first;
 		}
 		length++;
@@ -100,16 +100,16 @@ public:
 		subNode.item = Item;
 		if (length != 0)
 		{
-			first.get().previous.make(subNode);
-			first = first.get().previous;
+			first.Get().previous.Make(subNode);
+			first = first.Get().previous;
 			if (length == 1)
 			{
-				last.get().previous = first;
+				last.Get().previous = first;
 			}
 		}
 		else
 		{
-			first.make(subNode);
+			first.Make(subNode);
 			last = first;
 		}
 		length++;
@@ -117,7 +117,7 @@ public:
 	void InsertAt(T Item, int Index)
 	{
 		if (Index < 0 || Index > length)
-			throw std::exception("IndexOutOfRange");
+			throw std::out_of_range("IndexOutOfRange");
 
 		if (Index == length)
 		{
@@ -135,17 +135,17 @@ public:
 		SmrtPtr<node> indexPosition = first;
 		for (size_t i = 0; i < Index; i++)
 		{
-			indexPosition = indexPosition.get().next;
+			indexPosition = indexPosition.Get().next;
 		}
 
 		subNode.next = indexPosition;
-		subNode.previous = indexPosition.get().previous;
+		subNode.previous = indexPosition.Get().previous;
 		subNode.item = Item;
 
 		SmrtPtr<node> subNodePtr;
-		subNodePtr.make(subNode);
-		indexPosition.get().previous.get().next = subNodePtr;
-		indexPosition.get().previous = subNodePtr;
+		subNodePtr.Make(subNode);
+		indexPosition.Get().previous.Get().next = subNodePtr;
+		indexPosition.Get().previous = subNodePtr;
 
 		length++;
 	}
