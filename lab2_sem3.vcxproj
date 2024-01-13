@@ -160,7 +160,9 @@
   <ItemGroup>
     <ClCompile Include="Benchmark.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SortTester.cpp" />
     <ClCompile Include="Tests.cpp" />
+    <ClCompile Include="UI\UI.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
