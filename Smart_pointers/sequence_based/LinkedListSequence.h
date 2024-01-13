@@ -6,11 +6,11 @@
 template<class T>
 class LinkedListSequence :public Sequence<T>
 {
-	typedef struct Node
+	using node = struct Node
 	{
 		SmrtPtr<Node> next, previous;
 		T item;
-	}node;
+	};
 
 	SmrtPtr<node> first, last;
 	size_t length;

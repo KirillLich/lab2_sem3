@@ -1,4 +1,10 @@
 #include "Benchmark.h"
+#include <chrono>
+#include <iostream>
+#include <fstream>
+
+#include "Comparators.h"
+#include "Smart_pointers\sequence_based\ArraySequence.h"
 
 void SingleBenchmark(Sort func, int* array, size_t size, int& result)
 {

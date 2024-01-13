@@ -7,8 +7,7 @@
 
 class SortTester
 {
-	typedef bool(*Comp)(int, int);
-	typedef Sequence<int>* (*Sort)(Sequence<int>*, Comp);
+	using Sort = Sequence<int>* (*)(Sequence<int>*, Comp<int>);
 
 	void EmptySequence(Sort func)
 	{

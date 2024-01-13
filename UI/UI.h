@@ -4,11 +4,10 @@
 #include "..\Sorting.h"
 #include "..\Tests.h"
 #include "..\Benchmark.h"
+#include "..\Comparators.h"
 
-#include <chrono>
 #include <algorithm>
 #include <iostream>
-#include <fstream>
 
 class UserInterface
 {

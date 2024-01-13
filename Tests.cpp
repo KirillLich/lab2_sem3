@@ -1,4 +1,7 @@
 #include "Tests.h"
+#include "Smart_pointers\ArraySequenceTest.h"
+#include "Smart_pointers\SmartPtrTester.h"
+#include "SortTester.h"
 
 void RunTests()
 {

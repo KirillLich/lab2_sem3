@@ -2,8 +2,11 @@
 #define SORTING_H
 #include "Smart_pointers/based_struct/Sequence.h"
 
+template <typename T>
+using Comp = bool(*)(T, T);
+
 template<typename T>
-Sequence<T>* BubbleSort(Sequence<T>* seq, bool (*cmp)(T, T))
+Sequence<T>* BubbleSort(Sequence<T>* seq, Comp<T> func)
 {
 	if (seq == nullptr)
 	{
@@ -18,7 +21,7 @@ Sequence<T>* BubbleSort(Sequence<T>* seq, bool (*cmp)(T, T))
 	{
 		for (size_t j = 0; j < length - i - 1; j++)
 		{
-			if (cmp(seq->Get(j), seq->Get(j + 1)))
+			if (func(seq->Get(j), seq->Get(j + 1)))
 			{
 				T item = seq->Get(j);
 				seq->Get(j) = seq->Get(j + 1);
@@ -30,7 +33,7 @@ Sequence<T>* BubbleSort(Sequence<T>* seq, bool (*cmp)(T, T))
 }
 
 template<typename T>
-Sequence<T>* InsertionSort(Sequence<T>* seq, bool (*cmp)(T, T))
+Sequence<T>* InsertionSort(Sequence<T>* seq, Comp<T> func)
 {
 	if (seq == nullptr)
 	{
@@ -45,7 +48,7 @@ Sequence<T>* InsertionSort(Sequence<T>* seq, bool (*cmp)(T, T))
 	{
 		T item = seq->Get(i + 1);
 		size_t j = i + 1;
-		while (j > 0 && cmp(seq->Get(j - 1), item))
+		while (j > 0 && func(seq->Get(j - 1), item))
 		{
 			seq->Get(j) = seq->Get(j - 1);
 			j--;
@@ -56,7 +59,7 @@ Sequence<T>* InsertionSort(Sequence<T>* seq, bool (*cmp)(T, T))
 }
 
 template<typename T>
-void Quick(Sequence<T>* seq, bool (*cmp)(T, T), size_t start, size_t end)
+void Quick(Sequence<T>* seq, Comp<T> func, size_t start, size_t end)
 {
 	int pivotIndex = start + (end - start) / 2;
 	T pivot = seq->Get(pivotIndex);
@@ -64,12 +67,12 @@ void Quick(Sequence<T>* seq, bool (*cmp)(T, T), size_t start, size_t end)
 
 	for (size_t i = 0; i <= (end - start) / 2; i++)
 	{
-		while (!cmp(seq->Get(leftIndex), pivot) && leftIndex < pivotIndex)
+		while (!func(seq->Get(leftIndex), pivot) && leftIndex < pivotIndex)
 		{
 			leftIndex++;
 		}
 
-		while (!cmp(pivot, seq->Get(rightIndex)) && rightIndex > pivotIndex)
+		while (!func(pivot, seq->Get(rightIndex)) && rightIndex > pivotIndex)
 		{
 			rightIndex--;
 		}
@@ -87,12 +90,12 @@ void Quick(Sequence<T>* seq, bool (*cmp)(T, T), size_t start, size_t end)
 		else if (rightIndex == pivotIndex) pivotIndex = leftIndex;
 	}
 
-	if (pivotIndex > start) Quick(seq, cmp, start, pivotIndex - 1);
-	if (pivotIndex < end) Quick(seq, cmp, pivotIndex + 1, end);
+	if (pivotIndex > start) Quick(seq, func, start, pivotIndex - 1);
+	if (pivotIndex < end) Quick(seq, func, pivotIndex + 1, end);
 }
 
 template<typename T>
-Sequence<T>* QuickSort(Sequence<T>* seq, bool (*cmp)(T, T))
+Sequence<T>* QuickSort(Sequence<T>* seq, Comp<T> func)
 {
 	if (seq == nullptr)
 	{
@@ -100,7 +103,7 @@ Sequence<T>* QuickSort(Sequence<T>* seq, bool (*cmp)(T, T))
 	}
 	if (seq->GetLenght() != 0)
 	{
-		Quick(seq, cmp, 0, seq->GetLenght() - 1);
+		Quick(seq, func, 0, seq->GetLenght() - 1);
 	}
 	return seq;
 }
